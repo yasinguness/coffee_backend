@@ -35,6 +35,17 @@ class Order {
         next(new ApiError(err.message, httpStatus.BAD_REQUEST));
       });
   }
+
+  orderGetById(req, res, next) {
+    orderService
+      .findById(req.params.id)
+      .then((response) => {
+        successResponse(res, httpStatus.OK, response);
+      })
+      .catch((err) => {
+        next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
 }
 
 module.exports = new Order();

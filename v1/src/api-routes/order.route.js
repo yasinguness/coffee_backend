@@ -7,5 +7,6 @@ const orderController = require("../controllers/order.controller");
 
 router.route("/create").post(validate(validationSchema.createOrderSchema), orderController.create);
 router.route("/get-order").get(orderController.list);
+router.route("/:id").get(orderController.orderGetById);
 
 module.exports = router;

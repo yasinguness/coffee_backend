@@ -24,6 +24,17 @@ class Order {
         next(new ApiError(err.message, httpStatus.BAD_REQUEST));
       });
   }
+
+  list(req, res, next) {
+    orderService
+      .list({})
+      .then((response) => {
+        successResponse(res, httpStatus.OK, response);
+      })
+      .catch((err) => {
+        next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
 }
 
 module.exports = new Order();

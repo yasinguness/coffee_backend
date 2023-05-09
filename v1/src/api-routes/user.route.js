@@ -9,6 +9,6 @@ const userController = require("../controllers/user.controller");
 
 //User Login-Register
 router.route("/register").post(validate(validationSchema.registerSchema), userController.create);
-router.route("/", userController.getUser);
+router.route("/").get(userController.getUser);
 
 module.exports = router;

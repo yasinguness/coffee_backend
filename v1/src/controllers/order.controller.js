@@ -38,8 +38,9 @@ class Order {
   }
 
   orderGetById(req, res, next) {
+    const { page = 1, limit = 10 } = req.query;
     orderService
-      .findById(req.params.id)
+      .list(page, limit, { _id: req.params.id })
       .then((response) => {
         successResponse(res, httpStatus.OK, response);
       })

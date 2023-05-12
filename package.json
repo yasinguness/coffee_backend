@@ -4,7 +4,7 @@
   "description": "cafe-app-api",
   "main": "app.js",
   "scripts": {
-    "start": "node v1/src/app.js"
+    "start": "nodemon v1/src/app.js"
   },
   "author": "mehmetdogru",
   "license": "ISC",

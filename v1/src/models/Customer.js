@@ -12,13 +12,6 @@ const CustomerSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      min: 3,
-      max: 100,
-    },
-    phone: {
-      type: String,
-      required: true,
-      trim: true,
     },
     orders: [
       {

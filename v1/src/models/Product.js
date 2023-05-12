@@ -22,8 +22,15 @@ const ProductSchema = new mongoose.Schema(
     },
     size: {
       type: String,
-      enum: ["small", "medium", "large"],
-      default: "medium",
+      enum: ["S", "M", "L"],
+      default: "M",
+    },
+    smallPrice: Number,
+    largePrice: Number,
+    isSweet: {
+      type: String,
+      enum: ["coffee", "sweet"],
+      default: "coffee",
     },
   },
   { timestamps: true, versionKey: false }

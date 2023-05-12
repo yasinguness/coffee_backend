@@ -5,6 +5,7 @@ const createProductSchema = Joi.object({
   description: Joi.string().min(6).max(255),
   price: Joi.number().required(),
   size: Joi.string(),
+  isSweet: Joi.string().required(),
 });
 
 module.exports = { createProductSchema };

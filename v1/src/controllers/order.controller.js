@@ -26,8 +26,9 @@ class Order {
   }
 
   list(req, res, next) {
+    const { page = 1, limit = 10 } = req.query;
     orderService
-      .list({})
+      .list(page, limit)
       .then((response) => {
         successResponse(res, httpStatus.OK, response);
       })

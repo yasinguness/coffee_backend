@@ -25,6 +25,28 @@ class Product {
         next(new ApiError(err.message, httpStatus.BAD_REQUEST));
       });
   }
+
+  getSweet(req, res, next) {
+    productService
+      .list({ isSweet: "sweet" })
+      .then((response) => {
+        successResponse(res, httpStatus.OK, response);
+      })
+      .catch((err) => {
+        next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
+
+  getCoffee(req, res, next) {
+    productService
+      .list({ isSweet: "coffee" })
+      .then((response) => {
+        successResponse(res, httpStatus.OK, response);
+      })
+      .catch((err) => {
+        next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
 }
 
 module.exports = new Product();

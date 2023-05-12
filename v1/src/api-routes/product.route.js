@@ -7,5 +7,7 @@ const productController = require("../controllers/product.controller");
 
 router.route("/create").post(validate(validationSchema.createProductSchema), productController.create);
 router.route("/").get(productController.list);
+router.route("/sweets").get(productController.getSweet);
+router.route("/coffees").get(productController.getCoffee);
 
 module.exports = router;

@@ -26,6 +26,17 @@ class Product {
       });
   }
 
+  deleteProduct(req, res, next) {
+    productService
+      .delete(req.params.id)
+      .then((response) => {
+        successResponse(res, httpStatus.OK, { message: "Ürün silindi", productId: response._id });
+      })
+      .catch((err) => {
+        return next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
+
   getSweet(req, res, next) {
     productService
       .list({ isSweet: "sweet" })
@@ -45,6 +56,28 @@ class Product {
       })
       .catch((err) => {
         next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+      });
+  }
+
+  update(req, res, next) {
+    const product = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      size: req.body.size,
+      isSweet: req.body.isSweet,
+      quantitiy: req.body.quantitiy,
+    };
+    productService
+      .update(req.params.productId, product)
+      .then((response) => {
+        if (!response) {
+          return next(new ApiError("Product not found", httpStatus.BAD_REQUEST));
+        }
+        successResponse(res, httpStatus.OK, { message: "Updated product", product: response });
+      })
+      .catch((err) => {
+        return next(new ApiError(err.message, httpStatus.BAD_REQUEST));
       });
   }
 }

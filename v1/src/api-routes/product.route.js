@@ -9,5 +9,7 @@ router.route("/create").post(validate(validationSchema.createProductSchema), pro
 router.route("/").get(productController.list);
 router.route("/sweets").get(productController.getSweet);
 router.route("/coffees").get(productController.getCoffee);
+router.route("/delete-product/:id").delete(productController.deleteProduct);
+router.route("/update-product/:productId").put(validate(validationSchema.createProductSchema), productController.update);
 
 module.exports = router;

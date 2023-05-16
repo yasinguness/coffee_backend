@@ -32,6 +32,10 @@ const ProductSchema = new mongoose.Schema(
       enum: ["coffee", "sweet"],
       default: "coffee",
     },
+    quantitiy: {
+      type: Number,
+      required: false,
+    },
   },
   { timestamps: true, versionKey: false }
 );

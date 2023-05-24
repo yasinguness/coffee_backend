@@ -14,10 +14,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    quantitiy: {
-      type: Number,
-      required: false,
-    },
+
     description: {
       type: String,
       trim: true,
@@ -29,16 +26,10 @@ const ProductSchema = new mongoose.Schema(
       enum: ["S", "M", "L"],
       default: "M",
     },
-    smallPrice: Number,
-    largePrice: Number,
     isSweet: {
       type: String,
       enum: ["coffee", "sweet"],
       default: "coffee",
-    },
-    quantitiy: {
-      type: Number,
-      required: false,
     },
   },
   { timestamps: true, versionKey: false }

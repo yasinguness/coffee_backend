@@ -6,16 +6,20 @@ const OrderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "customer",
     },
-    products: [
+    orderDetails: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "product",
+        ref: "orderDetail",
       },
     ],
     status: {
       type: String,
       enum: ["pending", "in progress", "completed"],
       default: "pending",
+    },
+    totalPrice: {
+      type: Number,
+      required: true
     },
   },
   { timestamps: true, versionKey: false }

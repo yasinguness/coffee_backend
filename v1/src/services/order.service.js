@@ -6,7 +6,7 @@ class OrderService extends BaseService {
     super(BaseModel);
   }
 
-  list(page, limit, where) {
+  /* list(page, limit, where) {
     const allOrders = BaseModel.find(where || {})
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -19,7 +19,7 @@ class OrderService extends BaseService {
       });
 
     return allOrders;
-  }
+  } */
 }
 
 module.exports = new OrderService();

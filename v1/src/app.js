@@ -3,7 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const config = require("./config/index");
 const loaders = require("./loaders/index");
-const { userRoutes, cafeRoutes, productRoutes, employeeRoutes, customerRoutes, orderRoutes } = require("./api-routes");
+const { userRoutes, cafeRoutes, productRoutes, employeeRoutes, customerRoutes, orderRoutes, orderDetailRoutes } = require("./api-routes");
 const errorHandler = require("./middlewares/error-handler.middleware");
 const ApiError = require("./responses/error.response");
 const httpStatus = require("http-status");
@@ -24,6 +24,7 @@ app.listen(process.env.PORT || 5000, () => {
   app.use("/product", productRoutes);
   app.use("/customer", customerRoutes);
   app.use("/order", orderRoutes);
+  app.use("/order-detail", orderDetailRoutes);
 
   app.use((req, res, next) => {
     next(new ApiError("Aradığınız sayfa bulunmamaktadır!", httpStatus.NOT_FOUND));

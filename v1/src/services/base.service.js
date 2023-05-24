@@ -32,6 +32,10 @@ class BaseService {
   delete(id) {
     return this.BaseModel.findByIdAndDelete(id);
   }
+  
+  /* updateStock(productId, quantity){
+    return this.BaseModel.updateStock(productId, quantity);
+  } */
 }
 
 module.exports = BaseService;

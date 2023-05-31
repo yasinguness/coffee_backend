@@ -1,107 +1,65 @@
 const httpStatus = require("http-status");
 const ApiError = require("../responses/error.response");
-const successResponse = require("../responses/success.response");
+const {successResponse, errorResponse} = require("../responses/success.response");
 const orderService = require("../services/order.service");
-const productService = require("../services/product.service");
-const orderDetailService = require("../services/orderDetail.service");
 
 class Order {
-  async create(req, res, next) {
+  async createOrder(req, res, next) {
     try {
       const { customer, products } = req.body;
 
-      // Sipariş oluşturma işlemi
-      const order = await orderService.create({ customer, products });
+      const order = await orderService.create(customer, products);
 
-      // Ürünlerin stok kontrolü ve güncellenmesi
-      for (const productItem of products) {
-        const { product, quantity } = productItem;
-        await productService.updateStock(product, quantity);
-      }
-
-      successResponse(res, httpStatus.CREATED, order);
+      successResponse(res, httpStatus.CREATED,  order);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      next(new ApiError(error.message, 400));
     }
   }
 
-  async createOrder(req, res, next) {
+
+  async getOrder(req, res, next) {
     try {
+      const  orderId  = req.params.id;
 
-     
-      const { customer, orderDetail, totalPrice, status } = req.body;
+      const order = await orderService.findById(orderId).populate('customer').populate('products.product', 'name');
 
-      // Yeni bir Order oluşturma
-      const order = orderService.create(({
-        customer, orderDetail, totalPrice, status
-      }));
-
-      successResponse(res, httpStatus.CREATED, order);
-
-      //orderDetailService.update(req.body, { $push: { order: order } });
-    } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
-    }
-  }
-
-  async getOrderById(req, res, next) {
-    try {
-      const orderId = req.params.id;
-
-      // Siparişin veritabanından alınması
-      const order = await orderService.getById(orderId);
-
-      if (!order) {
-        throw new Error("Sipariş bulunamadı");
+      if(!order){
+        throw("Sipariş Bulunamadı");
       }
-
       successResponse(res, httpStatus.OK, order);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.NOT_FOUND));
+      next(new ApiError(error.message, 400));
     }
   }
 
-  async list(req, res, next) {
+  async getOrderList(req, res, next) {
     try {
+      const orders = await orderService.getOrderList();
 
-      const order = await orderService.list();
-
-      if (!order) {
-        throw new Error("Sipariş bulunamadı");
-      }
-
-      successResponse(res, httpStatus.OK, order);
+      successResponse(res, 200, orders);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.NOT_FOUND));
+      next(new ApiError(error.message, 400));
     }
   }
 
-  async updateOrderStatus(req, res, next) {
+  async deleteOrder(req,res,next){
     try {
-      const orderId = req.params.id;
-      const { status } = req.body;
+      const  orderId  = req.params.id;
 
-      // Siparişin güncellenmesi
-      const updatedOrder = await orderService.updateStatus(orderId, status);
+      const deletedOrder= await orderService.delete(orderId);
 
-      successResponse(res, httpStatus.OK, updatedOrder);
+            successResponse(res, httpStatus.OK, deletedOrder);
+
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      next(new ApiError(error.message, 400));
+
     }
   }
 
-  async deleteOrder(req, res, next) {
-    try {
-      const orderId = req.params.id;
-
-      // Siparişin silinmesi
-      await orderService.deleteById(orderId);
-
-      successResponse(res, httpStatus.OK, { message: "Sipariş silindi", orderId });
-    } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
-    }
-  }
+  
 }
 
 module.exports = new Order();
+
+
+ 

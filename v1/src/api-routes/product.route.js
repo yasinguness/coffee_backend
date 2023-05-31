@@ -10,7 +10,8 @@ router.route("/").get(productController.getProductList);
 router.route("/sweets").get(productController.getSweet);
 router.route("/coffees").get(productController.getCoffee);
 router.route("/:id").get(productController.getProductById);
+router.route("/search").get(productController.searchProduct);
 router.route("/delete-product/:id").delete(productController.deleteProduct);
-router.route("/update-product/:productId").put(validate(validationSchema.updateProductSchema), productController.update);
+router.route("/update-product/:productId").put(validate(validationSchema.updateProductSchema), productController.updateProduct);
 
 module.exports = router;

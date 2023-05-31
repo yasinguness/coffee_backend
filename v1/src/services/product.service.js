@@ -27,6 +27,21 @@ class ProductService extends BaseService {
       throw error;
     }
   }
+
+  async search(searchTerm) {
+    // Arama sorgusunu oluşturun
+    const searchQuery = {
+      $or: [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+      ],
+    };
+  
+    // Ürünleri arayın
+    const products = await BaseModel.find(searchQuery);
+  
+    return products;
+  }
 }
 
 module.exports = new ProductService();

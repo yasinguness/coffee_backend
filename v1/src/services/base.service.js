@@ -32,6 +32,9 @@ class BaseService {
   delete(id) {
     return this.BaseModel.findByIdAndDelete(id);
   }
+  findIndex(array, predicate) {
+    return array.findIndex(predicate);
+  }
   
   /* updateStock(productId, quantity){
     return this.BaseModel.updateStock(productId, quantity);

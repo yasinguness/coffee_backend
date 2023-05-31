@@ -1,25 +1,74 @@
+const Order = require('../models/Order');
+const Customer = require('../models/Customer');
+const Product = require('../models/Product');
 const BaseService = require("./base.service");
-const BaseModel = require("../models/Order");
 
 class OrderService extends BaseService {
   constructor() {
-    super(BaseModel);
+    super(Order);
   }
 
-  /* list(page, limit, where) {
-    const allOrders = BaseModel.find(where || {})
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
-      .populate({
-        path: "customer",
-        select: "name qrNo",
-      })
-      .populate({
-        path: "products",
-      });
+  async create(customerId, products) {
+    const groupedProducts = this.groupProducts(products);
+    const totalPrice = await this.calculateTotalPrice(groupedProducts);
 
-    return allOrders;
-  } */
+    const order = new Order({
+      customer: customerId,
+      products: groupedProducts,
+      status: 'pending',
+      totalPrice: totalPrice,
+    });
+
+    await order.save();
+
+    // Customer'a oluşturulan siparişi ekleyin
+    await Customer.findByIdAndUpdate(customerId, { $push: { orders: order._id } });
+
+    return order;
+  }
+
+  groupProducts(products) {
+    const groupedProducts = [];
+
+    for (const product of products) {
+      const existingProductIndex = this.findIndex(groupedProducts, (p) => p.product.toString() === product.product.toString());
+
+      if (existingProductIndex !== -1) {
+        groupedProducts[existingProductIndex].amount += product.amount;
+      } else {
+        groupedProducts.push({
+          product: product.product,
+          amount: product.amount,
+          currentPrice: product.currentPrice, 
+          selectedSize: product.selectedSize,
+        });
+      }
+    }
+
+    return groupedProducts;
+  }
+
+  async calculateTotalPrice(products) {
+    let totalPrice = 0;
+
+    for (const product of products) {
+      const { product: productId, amount ,currentPrice } = product;
+      const existingProduct = await Product.findById(productId).exec();
+
+      if (!existingProduct) {
+        throw new Error('Invalid product');
+      }
+
+      totalPrice +=currentPrice * amount;
+    }
+
+    return totalPrice;
+  }
+
+  async getOrderList() {
+    return this.list().populate('customer').populate('products.product', 'name price');
+  }
+
 }
 
 module.exports = new OrderService();

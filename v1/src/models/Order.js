@@ -6,11 +6,22 @@ const OrderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "customer",
     },
-    orderDetails: [
+    products: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "orderDetail",
-      },
+        amount:{
+            type:Number,
+            default:1
+        },
+        selectedSize: {
+          type:String,
+          default:"M"
+        } ,
+        currentPrice:{ type:Number},
+        product:{
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "product",
+        }
+      }
     ],
     status: {
       type: String,
@@ -19,7 +30,6 @@ const OrderSchema = new mongoose.Schema(
     },
     totalPrice: {
       type: Number,
-      required: true
     },
   },
   { timestamps: true, versionKey: false }

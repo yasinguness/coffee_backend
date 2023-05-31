@@ -21,6 +21,7 @@ const ProductSchema = new mongoose.Schema(
       min: 6,
       max: 255,
     },
+
     size: {
       type: String,
       enum: ["S", "M", "L"],

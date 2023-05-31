@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const ApiError = require("../responses/error.response");
-const successResponse = require("../responses/success.response");
+const {successResponse,errorResponse} = require("../responses/success.response");
 const customerService = require("../services/customer.service");
 
 class Customer {
@@ -12,7 +12,7 @@ class Customer {
 
       successResponse(res, httpStatus.CREATED, customer);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message);
     }
   }
 
@@ -23,7 +23,7 @@ class Customer {
 
       successResponse(res, httpStatus.CREATED, customer);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message);
     }
   }
 
@@ -39,7 +39,7 @@ class Customer {
 
       successResponse(res, httpStatus.OK, customer);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.NOT_FOUND));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message);
     }
   }
 }

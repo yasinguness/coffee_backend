@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const ApiError = require("../responses/error.response");
-const successResponse = require("../responses/success.response");
+const {successResponse,errorResponse} = require("../responses/success.response");
 const productService = require("../services/product.service");
 const { response } = require("express");
 
@@ -14,7 +14,7 @@ class Product {
 
       successResponse(res, httpStatus.CREATED, product);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message );
     }
   }
 
@@ -41,47 +41,24 @@ class Product {
 
       successResponse(res, httpStatus.OK, products);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message );
     }
   }
 
+
+
   async updateProduct(req, res, next) {
     try {
-      const product = {
-        name: req.body.name,
-        description: req.body.description,
-        price: req.body.price,
-      };
-      const productId = req.params.id;
-      //const { name, price, description, } = req.body;
+      const product = req.body;
+      const productId = req.params.productId;
 
       // Ürünün güncellenmesi
       const updatedProduct = await productService.update(productId,product);
 
-      successResponse(res, httpStatus.OK, { message: "Updated product", product: updatedProduct });
+      successResponse(res, httpStatus.OK, updatedProduct );
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      next(new ApiError(error.message, 400));
     }
-  }
-
-  update(req, res, next) {
-    const product = {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-     
-    };
-    productService
-      .update(req.params.productId, product)
-      .then((response) => {
-        if (!response) {
-          return next(new ApiError("Product not found", httpStatus.BAD_REQUEST));
-        }
-        successResponse(res, httpStatus.OK, { message: "Updated product", product: response });
-      })
-      .catch((err) => {
-        return next(new ApiError(err.message, httpStatus.BAD_REQUEST));
-      });
   }
 
   async deleteProduct(req, res, next) {
@@ -93,7 +70,7 @@ class Product {
 
       successResponse(res, httpStatus.OK, { message: "Ürün silindi", productId });
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message );
     }
   }
 
@@ -103,7 +80,7 @@ class Product {
 
       successResponse(res, httpStatus.OK, products);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message );
     }
   }
 
@@ -113,7 +90,20 @@ class Product {
 
       successResponse(res, httpStatus.OK, products);
     } catch (error) {
-      next(new ApiError(error.message, httpStatus.BAD_REQUEST));
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message );
+    }
+  }
+
+  async searchProduct(req, res, next) {
+    try {
+      const searchTerm = req.query.q; 
+  
+      // Ürünleri arama
+      const products = await productService.search(searchTerm);
+  
+      successResponse(res, httpStatus.OK, products);
+    } catch (error) {
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message);
     }
   }
 

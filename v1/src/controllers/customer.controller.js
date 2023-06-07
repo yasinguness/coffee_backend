@@ -16,6 +16,17 @@ class Customer {
     }
   }
 
+  async deleteAll(req,res,next){
+    try {
+      await customerService.deleteAll();
+      successResponse(res, httpStatus.OK, "All customers deleted successfully.");
+
+    } catch (error) {
+      errorResponse(res, httpStatus.BAD_REQUEST, error.message);
+
+    }
+  }
+
   async list(req, res, next) {
     try {
 

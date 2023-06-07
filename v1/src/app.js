@@ -7,6 +7,9 @@ const { userRoutes, cafeRoutes, productRoutes, employeeRoutes, customerRoutes, o
 const errorHandler = require("./middlewares/error-handler.middleware");
 const ApiError = require("./responses/error.response");
 const httpStatus = require("http-status");
+const authenticate=require("./middlewares/authenticate.middleware");
+const fileUpload = require("express-fileupload");
+
 
 config();
 loaders();
@@ -15,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
+app.use(fileUpload());
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`SERVER ${process.env.PORT} PORTUNDA ÇALIŞIYOR.`);

@@ -21,7 +21,7 @@ class Order {
     try {
       const  orderId  = req.params.id;
 
-      const order = await orderService.findById(orderId).populate('customer').populate('products.product', 'name');
+      const order = await orderService.findById(orderId).populate('customer').populate('products.product', 'name image');
 
       if(!order){
         throw("Sipariş Bulunamadı");

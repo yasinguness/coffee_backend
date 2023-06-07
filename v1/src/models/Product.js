@@ -21,6 +21,9 @@ const ProductSchema = new mongoose.Schema(
       min: 6,
       max: 255,
     },
+    image:{
+      type:String, trim:true
+    },
 
     size: {
       type: String,

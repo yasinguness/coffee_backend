@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       min: 8,
     },
-    profile_image: {
+    profileImage: {
       type: String,
       default: "default.png",
     },

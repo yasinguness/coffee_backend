@@ -8,5 +8,6 @@ const validationSchema = require("../validations/customer.validation");
 router.route("/create").post(validate(validationSchema.createCustomerSchema), customerController.createCustomer);
 router.route("/").get(customerController.list);
 router.route("/:id").get(customerController.getCustomerById);
+router.route("/deleteAll").delete(customerController.deleteAll);
 
 module.exports = router;

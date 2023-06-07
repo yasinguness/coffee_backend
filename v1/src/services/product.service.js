@@ -38,8 +38,9 @@ class ProductService extends BaseService {
     };
   
     // Ürünleri arayın
+
     const products = await BaseModel.find(searchQuery);
-  
+
     return products;
   }
 }

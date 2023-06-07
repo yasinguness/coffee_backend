@@ -12,6 +12,9 @@ class UserService extends BaseService {
       .skip((page - 1) * limit);
     return allUsers;
   }
+
+
+
 }
 
 module.exports = new UserService();

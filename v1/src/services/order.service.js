@@ -66,7 +66,7 @@ class OrderService extends BaseService {
   }
 
   async getOrderList() {
-    return this.list().populate('customer').populate('products.product', 'name price');
+    return this.list().populate('customer').populate('products.product', 'name price image');
   }
 
 }

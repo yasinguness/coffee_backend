@@ -149,7 +149,7 @@ class Product {
       // Ürünün güncellenmesi
       const updatedProduct = await productService.update(productId,{
         name: req.body.name,
-        image: fileName,
+        image: fileName || req.body.image,
         price: req.body.price,
         description: req.body.description,
         //isSweet:req.body.isSweet

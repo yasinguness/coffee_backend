@@ -1,10 +1,11 @@
 const httpStatus = require("http-status");
-const { passwordToHash, generateAccessToken } = require("../scripts/utils/helper");
+const { passwordToHash, generateAccessToken, comparePasswords } = require("../scripts/utils/helper");
 const ApiError = require("../responses/error.response");
 const {successResponse,errorResponse} = require("../responses/success.response");
 const userService = require("../services/user.service");
 
 class User {
+  
   create(req, res, next) {
     req.body.password = passwordToHash(req.body.password);
     req.body.isAdmin = false;
@@ -67,7 +68,7 @@ class User {
     }
   }
 
-async  changePassword(req, res, next) {
+/* async  changePassword(req, res, next) {
   try {
     const { userId, oldPassword, newPassword } = req.body;
 
@@ -107,6 +108,54 @@ async  changeEmail(req, res, next) {
   } catch (error) {
     next(new ApiError(error.message, httpStatus.NOT_FOUND));
   }
+}
+ */
+changePassword(req, res, next) {
+  const { userId, currentPassword, newPassword } = req.body;
+
+  userService
+    .findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new ApiError("User not found", httpStatus.NOT_FOUND);
+      }
+
+      const isPasswordValid = comparePasswords(currentPassword, user.password);
+
+      if (!isPasswordValid) {
+        throw new ApiError("Invalid current password", httpStatus.BAD_REQUEST);
+      }
+
+      const hashedNewPassword = passwordToHash(newPassword);
+
+      return userService.update(userId, hashedNewPassword);
+    })
+    .then(() => {
+      successResponse(res, httpStatus.OK, "Password changed successfully");
+    })
+    .catch((err) => {
+      next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+    });
+}
+
+changeEmail(req, res, next) {
+  const { userId, newEmail } = req.body;
+
+  userService
+    .findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new ApiError("User not found", httpStatus.NOT_FOUND);
+      }
+
+      return userService.update(userId, newEmail);
+    })
+    .then(() => {
+      successResponse(res, httpStatus.OK, "Email changed successfully");
+    })
+    .catch((err) => {
+      next(new ApiError(err.message, httpStatus.BAD_REQUEST));
+    });
 }
 
 }

@@ -27,7 +27,7 @@ const loginSchema = Joi.object({
 
 const changePasswordSchema = Joi.object({
   userId:Joi.string(),
-  oldPassword: Joi.string().required(),
+  currentPassword: Joi.string().required(),
   newPassword: Joi.string().regex(RegExp(pattern)).error(stringPassswordError).required(),
 });
 

@@ -56,7 +56,37 @@ class Order {
     }
   }
 
-  
+   async getPendingOrders(req, res) {
+    try {
+      const pendingOrders = await orderService.getPendingOrders();
+      successResponse(res, httpStatus.OK, pendingOrders);
+    } catch (error) {
+      errorResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  }
+
+   async updateOrder(req, res, next) {
+    try {
+      const { orderId } = req.params;
+      const { status } = req.body;
+
+      const order = await orderService.findById(orderId);
+
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      order.status = status;
+      await order.save();
+
+      successResponse(res, httpStatus.OK, order);
+    } catch (error) {
+      errorResponse(res, httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    }
+  }
+
+
+
 }
 
 module.exports = new Order();

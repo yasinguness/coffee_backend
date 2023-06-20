@@ -2,6 +2,7 @@ const Order = require('../models/Order');
 const Customer = require('../models/Customer');
 const Product = require('../models/Product');
 const BaseService = require("./base.service");
+const { Console } = require('winston/lib/winston/transports');
 
 class OrderService extends BaseService {
   constructor() {
@@ -67,6 +68,15 @@ class OrderService extends BaseService {
 
   async getOrderList() {
     return this.list().populate('customer').populate('products.product', 'name price image');
+  }
+
+   async getPendingOrders() {
+    try {
+      const pendingOrders = await Order.find({ status: "pending" }).populate("customer").populate('products.product', 'name price image');
+      return pendingOrders;
+    } catch (error) {
+      throw new Error("Error retrieving pending orders");
+    }
   }
 
 }
